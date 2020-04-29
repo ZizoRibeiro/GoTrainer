@@ -23,7 +23,7 @@ class CreateAppointmentServices {
     );
 
     if (findSameDateAppointment) {
-      throw Error('Professional can not be booked at this time');
+      throw Error('Sorry! Professional cannot be booked at this time');
     }
 
     const appointment = appointmentsRepository.create({
