@@ -5,12 +5,15 @@ import Appointment from '../models/Appointment';
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
 
 interface RequestDTO {
-  provider: string;
+  provider_id: string;
   date: Date;
 }
 
 class CreateAppointmentServices {
-  public async execute({ date, provider }: RequestDTO): Promise<Appointment> {
+  public async execute({
+    date,
+    provider_id,
+  }: RequestDTO): Promise<Appointment> {
     const appointmentsRepository = getCustomRepository(AppointmentsRepository);
 
     const appointmentDate = startOfHour(date);
@@ -20,11 +23,11 @@ class CreateAppointmentServices {
     );
 
     if (findSameDateAppointment) {
-      throw Error('Professional can not be booked at this time');
+      throw Error('Sorry! Professional cannot be booked at this time');
     }
 
     const appointment = appointmentsRepository.create({
-      provider,
+      provider_id,
       date: appointmentDate,
     });
 
