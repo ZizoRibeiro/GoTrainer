@@ -4,6 +4,8 @@ import { getCustomRepository } from 'typeorm';
 import Appointment from '../models/Appointment';
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
 
+import AppError from '../errors/AppError';
+
 interface RequestDTO {
   provider_id: string;
   date: Date;
@@ -23,7 +25,7 @@ class CreateAppointmentServices {
     );
 
     if (findSameDateAppointment) {
-      throw Error('Sorry! Professional cannot be booked at this time');
+      throw new AppError('Sorry! Professional cannot be booked at this time');
     }
 
     const appointment = appointmentsRepository.create({
