@@ -32,7 +32,7 @@ it('should provider not be able to create two appointments using the same time s
     provider_id: '123123123',
   });
 
-  expect(
+  await expect(
     createAppointment.execute({
       date: appointmentDate,
       provider_id: '123123123',
