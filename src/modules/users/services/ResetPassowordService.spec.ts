@@ -1,4 +1,4 @@
-// import AppError from '@shared/errors/AppError';
+import AppError from '@shared/errors/AppError';
 
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
 import FakeUserTokensRepository from '@modules/users/repositories/fakes/FakeUserTokensRepository';
@@ -10,7 +10,7 @@ let fakeUserTokensRepository: FakeUserTokensRepository;
 let fakeHashProvider: FakeHashProvider;
 let resetPassword: ResetPasswordService;
 
-describe('ForgotPasswordEmail', () => {
+describe('ResetPasswordService', () => {
   beforeEach(() => {
     fakeUsersRepository = new FakeUsersRepository();
     fakeUserTokensRepository = new FakeUserTokensRepository();
@@ -43,5 +43,47 @@ describe('ForgotPasswordEmail', () => {
 
     expect(generateHash).toHaveBeenCalledWith('123123');
     expect(updatedUser?.password).toBe('123123');
+  });
+
+  it('should not be able to reset password without token', async () => {
+    await expect(
+      resetPassword.execute({
+        token: 'no-token',
+        password: '654321',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
+  it('should not be able to reset password without an User', async () => {
+    const { token } = await fakeUserTokensRepository.generate('no-user');
+    await expect(
+      resetPassword.execute({
+        token,
+        password: '654321',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
+  it('should not be able to reset the password with expired token', async () => {
+    const user = await fakeUsersRepository.create({
+      name: 'zizo ribeiro',
+      email: 'zizoribeiro@example.com',
+      password: '123123123',
+    });
+
+    const { token } = await fakeUserTokensRepository.generate(user.id);
+
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => {
+      const customDate = new Date();
+
+      return customDate.setHours(customDate.getHours() + 3);
+    });
+
+    await expect(
+      resetPassword.execute({
+        password: '123123',
+        token,
+      }),
+    ).rejects.toBeInstanceOf(AppError);
   });
 });
