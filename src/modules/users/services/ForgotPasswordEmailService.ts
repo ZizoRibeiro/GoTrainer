@@ -33,7 +33,12 @@ class ForgotPasswordEmailService {
 
     await this.userTokensRepository.generate(user.id);
 
-    this.mailProvider.sendMail(email, 'Reset password email has been received');
+    const { token } = await this.userTokensRepository.generate(user.id);
+
+    await this.mailProvider.sendMail(
+      email,
+      `Reset password email has been received: ${token}`,
+    );
   }
 }
 
