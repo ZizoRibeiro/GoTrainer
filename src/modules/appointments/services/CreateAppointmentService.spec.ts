@@ -2,13 +2,18 @@ import AppError from '@shared/errors/AppError';
 import FakeAppointmentsRepository from '@modules/appointments/repositories/fakes/FakeAppointmentsRepository';
 import CreateAppointmentService from './CreateAppointmentService';
 
+let fakeAppointmentsRepository: FakeAppointmentsRepository;
+let createAppointment: CreateAppointmentService;
+
 describe('CreateAppointment', () => {
-  it(' should be able to create a new appointment', async () => {
-    const fakeAppointmentsRepository = new FakeAppointmentsRepository();
-    const createAppointment = new CreateAppointmentService(
+  beforeEach(() => {
+    fakeAppointmentsRepository = new FakeAppointmentsRepository();
+    createAppointment = new CreateAppointmentService(
       fakeAppointmentsRepository,
     );
+  });
 
+  it(' should be able to create a new appointment', async () => {
     const appointment = await createAppointment.execute({
       date: new Date(),
       provider_id: '123123123',
@@ -20,11 +25,6 @@ describe('CreateAppointment', () => {
 });
 
 it('should provider not be able to create two appointments using the same time spot', async () => {
-  const fakeAppointmentsRepository = new FakeAppointmentsRepository();
-  const createAppointment = new CreateAppointmentService(
-    fakeAppointmentsRepository,
-  );
-
   const appointmentDate = new Date(2020, 6, 3, 5);
 
   await createAppointment.execute({
