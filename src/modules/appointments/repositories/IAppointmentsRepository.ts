@@ -1,7 +1,7 @@
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 import IFindMonthAppointmentsProviderDTO from '@modules/appointments/dtos/IFindMonthAppointmentsProviderDTO';
 import ICreateAppointmentDTO from '@modules/appointments/dtos/ICreateAppointmentDTO';
-import IFindDailyAvailabilityProviderDTO from '@modules/appointments/dtos/IFindDailyAvailabilityProvidderDTO';
+import IFindDailyAvailabilityProviderDTO from '@modules/appointments/dtos/IFindDailyAvailabilityProviderDTO';
 
 export default interface IAppointmentsRepository {
   create(data: ICreateAppointmentDTO): Promise<Appointment>;
