@@ -5,7 +5,7 @@ import Appointment from '@modules/appointments/infra/typeorm/entities/Appointmen
 import IAppointmentRepository from '@modules/appointments/repositories/IAppointmentsRepository';
 import ICreateAppointmentDTO from '@modules/appointments/dtos/ICreateAppointmentDTO';
 import IFindMonthAppointmentsProvidersDTO from '@modules/appointments/dtos/IFindMonthAppointmentsProviderDTO';
-import IFindDailyAvailabilityProviderDTO from '@modules/appointments/dtos/IFindDailyAvailabilityProvidderDTO';
+import IFindDailyAvailabilityProviderDTO from '@modules/appointments/dtos/IFindDailyAvailabilityProviderDTO';
 
 class AppointmentsRepository implements IAppointmentRepository {
   private ormRepository: Repository<Appointment>;
