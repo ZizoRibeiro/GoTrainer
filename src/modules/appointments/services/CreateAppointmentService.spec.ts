@@ -1,15 +1,23 @@
+import 'reflect-metadata';
+
 import AppError from '@shared/errors/AppError';
+
+import FakeNotificationsRepository from '@modules/notifications/repositories/fake/FakeNotificationsRepository';
 import FakeAppointmentsRepository from '@modules/appointments/repositories/fakes/FakeAppointmentsRepository';
 import CreateAppointmentService from './CreateAppointmentService';
 
 let fakeAppointmentsRepository: FakeAppointmentsRepository;
 let createAppointment: CreateAppointmentService;
+let fakeNotificationsRepository: FakeNotificationsRepository;
 
 describe('CreateAppointment', () => {
   beforeEach(() => {
     fakeAppointmentsRepository = new FakeAppointmentsRepository();
+    fakeNotificationsRepository = new FakeNotificationsRepository();
+
     createAppointment = new CreateAppointmentService(
       fakeAppointmentsRepository,
+      fakeNotificationsRepository,
     );
   });
 
@@ -29,7 +37,7 @@ describe('CreateAppointment', () => {
   });
 
   it('should provider not be able to create two appointments using the same time spot', async () => {
-    const appointmentDate = new Date(2020, 6, 3, 5);
+    const appointmentDate = new Date(2020, 7, 8, 10);
 
     await createAppointment.execute({
       date: appointmentDate,
@@ -62,7 +70,7 @@ describe('CreateAppointment', () => {
 
   it('should not be able to create an appointment using user as provider ', async () => {
     jest.spyOn(Date, 'now').mockImplementationOnce(() => {
-      return new Date(2020, 7, 1, 12).getTime();
+      return new Date(2020, 7, 1, 13).getTime();
     });
 
     await expect(
@@ -76,7 +84,7 @@ describe('CreateAppointment', () => {
 
   it('should not be able to create an appointment before 8am and after 5pm', async () => {
     jest.spyOn(Date, 'now').mockImplementationOnce(() => {
-      return new Date(2020, 7, 1, 12).getTime();
+      return new Date(2020, 7, 1, 16).getTime();
     });
 
     await expect(
